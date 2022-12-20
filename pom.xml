@@ -34,6 +34,7 @@
 		<sonar.jbc.coverage.receiver.port>7470</sonar.jbc.coverage.receiver.port>
 		<sonar.jbc.coverage.report>${sonar.jbc.tafj.home}/CodeCoverageReceiver/data/${sonar.jbc.coverage.instance}/coverage.ser</sonar.jbc.coverage.report>
 		<sonar.jbc.coverage.port>7474</sonar.jbc.coverage.port>
+		<sonar.jbc.coverage>true</sonar.jbc.coverage>
 	</properties>
 
 	<dependencies>
