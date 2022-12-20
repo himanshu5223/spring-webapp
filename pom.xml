@@ -23,21 +23,18 @@
 		<sonar.verbose>true</sonar.verbose>
 		<sonar.jbc.precompiler.check>true</sonar.jbc.precompiler.check>
 		<sonar.jbc.component.build>true</sonar.jbc.component.build>
-		<sonar.jbc.duplication>true</sonar.jbc.duplication.build>
+		<sonar.jbc.duplication>true</sonar.jbc.duplication>
 		<sonar.cpd.jbc.minimumTokens>30</sonar.cpd.jbc.minimumTokens>
 		<sonar.cpd.jbc.minimumLines>5</sonar.cpd.jbc.minimumLines>
 		<sonar.jbc.tafj.home>${project.build.directory}</sonar.jbc.tafj.home>
-		<sonar.jbc.component.project>${sonar.projectName}</soanr.jbc.component.project>
+		<sonar.jbc.component.project>${sonar.projectName}</sonar.jbc.component.project>
 		<sonar.jbc.precompiler.report.path>${sonar.jbc.tafj.home}/jbcPrecompilerReport</sonar.jbc.precompiler.report.path>
 		<sonar.jbc.component.build.threads>1</sonar.jbc.component.build.threads>
 		<sonar.jbc.coverage.instance>${sonar.jbc.component.project}</sonar.jbc.coverage.instance>
-		<sonar.jbc.coverage.receiver.port>7470</sonar.jbc.coverage.receiver.port
+		<sonar.jbc.coverage.receiver.port>7470</sonar.jbc.coverage.receiver.port>
 		<sonar.jbc.coverage.report>${sonar.jbc.tafj.home}/CodeCoverageReceiver/data/${sonar.jbc.coverage.instance}/coverage.ser</sonar.jbc.coverage.report>
 		<sonar.jbc.coverage.port>7474</sonar.jbc.coverage.port>
-		
 	</properties>
-
-
 
 	<dependencies>
 		<dependency>
