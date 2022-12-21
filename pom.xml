@@ -1,47 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.awstechguide</groupId>
-	<artifactId>webapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>webapp</name>
-	<description>Demo project for Spring Boot</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>testing-libraries-2</artifactId>
+    <name>testing-libraries-2</name>
 
-	<properties>
-		<java.version>1.8</java.version>
-		<!--SONAR SENSOR PROPERTIES-->
-		<sonar.sources>.</sonar.sources>
-		<sonar.exclusions>**/*.java,**/*.js,**/*.xml</sonar.exclusions>
-		<sonar.verbose>true</sonar.verbose>
-		<sonar.jbc.precompiler.check>true</sonar.jbc.precompiler.check>
-		<sonar.jbc.component.build>true</sonar.jbc.component.build>
-		<sonar.jbc.duplication>true</sonar.jbc.duplication>
-		<sonar.cpd.jbc.minimumTokens>30</sonar.cpd.jbc.minimumTokens>
-		<sonar.cpd.jbc.minimumLines>5</sonar.cpd.jbc.minimumLines>
-		<sonar.jbc.tafj.home>${project.build.directory}</sonar.jbc.tafj.home>
-		<sonar.jbc.component.project>${sonar.projectName}</sonar.jbc.component.project>
-		<sonar.jbc.precompiler.report.path>${sonar.jbc.tafj.home}/jbcPrecompilerReport</sonar.jbc.precompiler.report.path>
-		<sonar.jbc.component.build.threads>1</sonar.jbc.component.build.threads>
-		<sonar.jbc.coverage.instance>${sonar.jbc.component.project}</sonar.jbc.coverage.instance>
-		<sonar.jbc.coverage.receiver.port>7470</sonar.jbc.coverage.receiver.port>
-		<sonar.jbc.coverage.report>${sonar.jbc.tafj.home}/CodeCoverageReceiver/data/${sonar.jbc.coverage.instance}/coverage.ser</sonar.jbc.coverage.report>
-		<sonar.jbc.coverage.port>7474</sonar.jbc.coverage.port>
-		<sonar.jbc.coverage>true</sonar.jbc.coverage>
-		<jacoco.version>0.8.6</jacoco.version>
-        <system-rules.version>1.19.0</system-rules.version>
-        <system-lambda.version>1.0.0</system-lambda.version>
-        <system-stubs.version>1.1.0</system-stubs.version>
-	</properties>
+    <parent>
+        <groupId>com.baeldung</groupId>
+        <artifactId>testing-modules</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-	<dependencyManagement>
+    <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>junit</groupId>
@@ -52,44 +23,51 @@
         </dependencies>
     </dependencyManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-rules</artifactId>
+            <version>${system-rules.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>${system-lambda.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.org.webcompere</groupId>
+            <artifactId>system-stubs-jupiter</artifactId>
+            <version>${system-stubs.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uk.org.webcompere</groupId>
+            <artifactId>system-stubs-junit4</artifactId>
+            <version>${system-stubs.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>jstl</artifactId>
-		    <version>1.2</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
-		<dependency>
-		    <groupId>org.apache.tomcat.embed</groupId>
-		    <artifactId>tomcat-embed-jasper</artifactId>
-		    <version>9.0.34</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
+    <build>
+        <finalName>testing-libraries-2</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!-- Plugins for JACOCO Coverage report -->
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
@@ -115,9 +93,21 @@
                         </goals>
                     </execution>
                 </executions>
-			</plugin>
-		</plugins>
-		<finalName>${project.name}test</finalName>
-	</build>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <properties>
+        <jacoco.version>0.8.6</jacoco.version>
+        <system-rules.version>1.19.0</system-rules.version>
+        <system-lambda.version>1.0.0</system-lambda.version>
+        <system-stubs.version>1.1.0</system-stubs.version>
+    </properties>
 
 </project>
