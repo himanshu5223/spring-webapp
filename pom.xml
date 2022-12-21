@@ -19,8 +19,9 @@
 		<java.version>1.8</java.version>
 		<!--SONAR SENSOR PROPERTIES-->
 		<sonar.sources>.</sonar.sources>
-		<sonar.exclusions>**/*.java,**/*.js,**/*.xml</sonar.exclusions>
+		<sonar.exclusions>**/*.java,**/*.js,**/*.xml,**/*.b</sonar.exclusions>
 		<sonar.verbose>true</sonar.verbose>
+		<sonar.coverage.exclusions>*/*.js,src/*main.ts,*/*polyfills.ts,*/*environment.ts,**/*module.ts</sonar.coverage.exclusions>
 		<sonar.jbc.precompiler.check>true</sonar.jbc.precompiler.check>
 		<sonar.jbc.component.build>true</sonar.jbc.component.build>
 		<sonar.jbc.duplication>true</sonar.jbc.duplication>
