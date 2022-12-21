@@ -85,25 +85,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-				<execution>
-                    <id>jacoco-initialize</id>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>jacoco-site</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                </execution>
-			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>
