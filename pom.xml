@@ -35,7 +35,22 @@
 		<sonar.jbc.coverage.report>${sonar.jbc.tafj.home}/CodeCoverageReceiver/data/${sonar.jbc.coverage.instance}/coverage.ser</sonar.jbc.coverage.report>
 		<sonar.jbc.coverage.port>7474</sonar.jbc.coverage.port>
 		<sonar.jbc.coverage>true</sonar.jbc.coverage>
+		<jacoco.version>0.8.6</jacoco.version>
+        <system-rules.version>1.19.0</system-rules.version>
+        <system-lambda.version>1.0.0</system-lambda.version>
+        <system-stubs.version>1.1.0</system-stubs.version>
 	</properties>
+
+	<dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 	<dependencies>
 		<dependency>
@@ -75,15 +90,50 @@
 					<groupId>org.junit.vintage</groupId>
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
+				<execution>
+                    <id>jacoco-initialize</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>jacoco-site</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
 			</exclusions>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/baeldung/**/ExcludedPOJO.class</exclude>
+                        <exclude>com/baeldung/**/*DTO.*</exclude>
+                        <exclude>**/config/*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
 			</plugin>
 		</plugins>
 		<finalName>${project.name}test</finalName>

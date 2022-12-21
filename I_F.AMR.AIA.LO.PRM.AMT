@@ -1,0 +1,22 @@
+* I_F.AMR.AIA.LO.PRM.AMT Created 26 JUN 20 at 02:01PM by weblogic/KARTHI.1
+*      PREFIX[AIA.PRM]
+                EQU AIA.PRM.DATE.OF.BIRTH TO 1,   AmrAiaLoPrmAmt_DateOfBirth TO 1,
+                           AIA.PRM.GENDER TO 2,   AmrAiaLoPrmAmt_Gender TO 2,
+                         AIA.PRM.INDUSTRY TO 3,   AmrAiaLoPrmAmt_Industry TO 3,
+                  AIA.PRM.APPROVED.AMOUNT TO 4,   AmrAiaLoPrmAmt_ApprovedAmount TO 4,
+                     AIA.PRM.GRACE.PERIOD TO 5,   AmrAiaLoPrmAmt_GracePeriod TO 5,
+                        AIA.PRM.LOAN.TERM TO 6,   AmrAiaLoPrmAmt_LoanTerm TO 6,
+                   AIA.PRM.PREMIUM.AMOUNT TO 7,   AmrAiaLoPrmAmt_PremiumAmount TO 7,
+              AIA.PRM.LOAN.APPLICATION.ID TO 8,   AmrAiaLoPrmAmt_LoanApplicationId TO 8,
+                    AIA.PRM.POLICY.NUMBER TO 9,   AmrAiaLoPrmAmt_PolicyNumber TO 9,
+		       AIA.PRM.OCCUPATION TO 10,  AmrAiaLoPrmAmt_Occupation TO 10,
+               AIA.PRM.LOAN.INTEREST.RATE TO 11,  AmrAiaLoPrmAmt_LoanInterestRate TO 11,	                    
+                    AIA.PRM.RECORD.STATUS TO 12,  AmrAiaLoPrmAmt_RecordStatus TO 12,
+                          AIA.PRM.CURR.NO TO 13,  AmrAiaLoPrmAmt_CurrNo TO 13,
+                         AIA.PRM.INPUTTER TO 14,  AmrAiaLoPrmAmt_Inputter TO 14,
+                        AIA.PRM.DATE.TIME TO 15,  AmrAiaLoPrmAmt_DateTime TO 15,
+                       AIA.PRM.AUTHORISER TO 16,  AmrAiaLoPrmAmt_Authoriser TO 16,
+                          AIA.PRM.CO.CODE TO 17,  AmrAiaLoPrmAmt_CoCode TO 17,
+                        AIA.PRM.DEPT.CODE TO 18,  AmrAiaLoPrmAmt_DeptCode TO 18,
+                     AIA.PRM.AUDITOR.CODE TO 19,  AmrAiaLoPrmAmt_AuditorCode TO 19,
+                  AIA.PRM.AUDIT.DATE.TIME TO 20,  AmrAiaLoPrmAmt_AuditDateTime TO 20

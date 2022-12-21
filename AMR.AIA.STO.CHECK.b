@@ -1,0 +1,53 @@
+*-----------------------------------------------------------------------------
+SUBROUTINE AMR.AIA.STO.CHECK
+*-------------------------------------------------------------------------
+
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_F.STANDING.ORDER
+	$INSERT I_F.FUNDS.TRANSFER
+
+
+	GOSUB INITIALISE
+    GOSUB PROCESS
+	RETURN
+	
+
+*--------------- 
+INITIALISE:
+*---------------
+
+	FN.STO = "F.STANDING.ORDER"
+	FL.STO = ""
+	CALL OPF(FN.STO, FL.STO)
+	
+	
+	FN.FT = "F.FUNDS.TRANSFER"
+	FL.FT = ""
+	CALL OPF(FN.FT, FL.FT)
+	
+	CALL GET.LOC.REF("FUNDS.TRANSFER","L.AMR.POLICY.NO",AMR.FT.POLICY.NO.POS)
+	CALL GET.LOC.REF("STANDING.ORDER","L.AMR.POLICY.NO",AMR.STO.POLICY.NO.POS)
+
+RETURN
+
+*--------------- 
+PROCESS:
+*---------------
+
+	Y.DEBIT.ACCT = R.NEW(FT.DEBIT.ACCT.NO)
+	
+	Y.STO.REC = ""
+	Y.STO.REC.ERR = ""
+	CALL F.READ(FN.STO,Y.DEBIT.ACCT:".1",Y.STO.REC,FL.STO,Y.STO.REC.ERR)
+	
+	IF Y.STO.REC NE "" THEN
+	
+		R.NEW(FT.LOCAL.REF)<1,AMR.FT.POLICY.NO.POS> = Y.STO.REC<STO.LOCAL.REF><1,AMR.STO.POLICY.NO.POS>
+	
+	END
+
+
+RETURN
+
+END

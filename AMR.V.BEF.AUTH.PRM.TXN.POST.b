@@ -1,0 +1,154 @@
+*********************************************************************************
+SUBROUTINE AMR.V.BEF.AUTH.PRM.TXN.POST
+*********************************************************************************
+*Desription Name       : To post transaction for premium amount deduction
+*Developer Name        :
+*Company Name          : Techmill Technologies pvt ltd
+*ODR Number            : N/A
+*Subroutine Type       : S
+*Attached to           : VERSION>FUNDS.TRANSFER,EM.AA.DISBURSE
+*		       : VERSION>TELLER,EM.AA.DISBURSE (Not used now)
+*                      : VERSION>FUNDS.TRANSFER,EM.AA.CHQ.DISBURSE
+*Incoming Parameters   : N/A
+*Outgoing Parameters   : N/A
+*Development Date      : 29/09/2020
+*Development Name      : AIA Interface
+***********************************************************************************
+* Reference ID			:	INC0025222
+* Description			:	Disburse loan charge fee LRI two times
+* Modified by 			: 	Chea Oengviseth
+* Modified date 		:	13-01-2021
+*-----------------------------------------------------------------------------
+* DATE CREATED        : 01/APR/2022
+* CREATED BY          : CHOU RAKSA
+* DESCRIPTION         : CHG0034775
+*                     : BOD-Request to display the LO number after Txn description in AIA
+* ATTACHED TO         : FUNDS.TRANSFER,EM.AA.DISBURSE
+* ATTACHED AS         : Before Auth Routine
+* IN/OUT ARGUMENTS    : N/A
+*-----------------------------------------------------------------------------
+
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_F.FUNDS.TRANSFER
+    $INSERT I_F.AMR.AIA.LO.PRM.AMT
+    $INSERT I_F.TELLER
+    $INSERT I_F.ACCOUNT
+    $INSERT I_F.AA.CUSTOMER
+    $INSERT I_F.AMR.AIA.PARAM
+	$INSERT I_F.AA.ARRANGEMENT
+
+    GOSUB INIT
+    GOSUB PROCESS
+RETURN
+
+*----------------------
+INIT:
+*----------------------
+    
+    FN.ACCOUNT = "F.ACCOUNT"
+    F.ACCOUNT = ""
+    CALL OPF (FN.ACCOUNT,F.ACCOUNT)
+    
+    FN.AA.ARR.CUSTOMER = "F.AA.ARR.CUSTOMER"
+    F.AA.ARR.CUSTOMER = ""
+    CALL OPF(FN.AA.ARR.CUSTOMER,F.AA.ARR.CUSTOMER)
+    
+    FN.AMR.AIA.LO.PRM.AMT = "F.AMR.AIA.LO.PRM.AMT"
+    F.AMR.AIA.LO.PRM.AMT = ""
+    CALL OPF(FN.AMR.AIA.LO.PRM.AMT,F.AMR.AIA.LO.PRM.AMT)
+	
+	;*INC0025222--Start
+	FN.AA.ARRANGEMENT = 'F.AA.ARRANGEMENT'
+	F.AA.ARRANGEMENT = ''
+	CALL OPF(FN.AA.ARRANGEMENT,F.AA.ARRANGEMENT)
+	;*INC0025222--End
+
+    FN.AIA = 'F.AMR.AIA.PARAM'
+    F.AIA = ''
+    CALL OPF(FN.AIA,F.AIA)
+
+    Y.CURR.COMPANY = ID.COMPANY
+    Y.AIA.ID = "SYSTEM"
+    CALL F.READ(FN.AIA,Y.AIA.ID,R.AIA.REC,F.AIA,AIA.ERR)
+    Y.RECEIVER.ACCOUNT = R.AIA.REC<AMR.AIA.RECIEVER.ACCOUNT>
+    Y.RECEIVER.ACCOUNT = Y.RECEIVER.ACCOUNT:Y.CURR.COMPANY[6,4]
+    Y.AIA.COA.CURR = R.AIA.REC<AMR.AIA.CREDIT.CURRENCY>
+
+       
+    Y.APPLICATION = "AA.ARR.CUSTOMER":FM:"FUNDS.TRANSFER"
+    Y.FIELD = "LOAN.APPL.ID":FM:"L.AMR.REF.ID"
+    Y.POS.REF = ""
+    CALL MULTI.GET.LOC.REF(Y.APPLICATION,Y.FIELD,Y.POS.REF)
+
+    Y.LOAN.APP.ID.POS = Y.POS.REF<1,1> 
+    Y.FT.REF.ID.POS = Y.POS.REF<2,1>
+    IF APPLICATION EQ "FUNDS.TRANSFER" THEN
+    
+        Y.LOAN.ACCT = R.NEW(FT.DEBIT.ACCT.NO)
+        Y.DEBIT.CURRENCY = R.NEW(FT.DEBIT.CURRENCY)
+        Y.CUST.ACCT = R.NEW(FT.CREDIT.ACCT.NO)
+        
+    END
+
+    LOCATE Y.DEBIT.CURRENCY IN Y.AIA.COA.CURR<1,1> SETTING Y.POS THEN
+        Y.AIA.COA.AC = R.AIA.REC<AMR.AIA.CREDIT.ACCOUNT,Y.POS>
+    END
+    
+RETURN
+
+*-----------------------
+PROCESS:
+*-----------------------
+	
+    CALL F.READ(FN.ACCOUNT,Y.LOAN.ACCT,R.ACCOUNT,F.ACCOUNT,E.ACCOUNT)
+    
+    Y.ARRANGEMENT.ID = R.ACCOUNT<AC.ARRANGEMENT.ID>
+    Y.OPENING.DATE = R.ACCOUNT<AC.OPENING.DATE>
+    Y.CUR.CR.CCY = R.ACCOUNT<AC.CURRENCY>
+    
+    Y.AA.ARR.CUSTOMER = Y.ARRANGEMENT.ID:"-CUSTOMER-":Y.OPENING.DATE:".1"
+    CALL F.READ(FN.AA.ARR.CUSTOMER,Y.AA.ARR.CUSTOMER,R.AA.ARR.CUSTOMER,F.AA.ARR.CUSTOMER,E.AA.ARR.CUSTOMER)
+    Y.AMR.AIA.LO.PRM.AMT = R.AA.ARR.CUSTOMER<AA.CUS.LOCAL.REF,Y.LOAN.APP.ID.POS>
+	
+	;*INC0025222--Start
+	CALL F.READ(FN.AA.ARRANGEMENT,Y.ARRANGEMENT.ID,REC.AA.ARRANGEMENT,F.AA.ARRANGEMENT,AA.ARRANGEMENT.ERR) 
+	AA.ARR.STATUS = REC.AA.ARRANGEMENT<AA.ARR.ARR.STATUS>
+	
+	IF AA.ARR.STATUS EQ 'CURRENT' THEN RETURN 
+	;*INC0025222--End
+    
+    CALL F.READ(FN.AMR.AIA.LO.PRM.AMT,Y.AMR.AIA.LO.PRM.AMT,R.AMR.AIA.LO.PRM.AMT,F.AMR.AIA.LO.PRM.AMT,E.AMR.AIA.LO.PRM.AMT)
+    Y.PREMIUM.AMOUNT = R.AMR.AIA.LO.PRM.AMT<AIA.PRM.PREMIUM.AMOUNT>
+
+    IF Y.PREMIUM.AMOUNT THEN
+        
+        Y.RECORD1<FT.TRANSACTION.TYPE> = 'ACAI';*CHG0034775
+        Y.RECORD1<FT.DEBIT.ACCT.NO> = Y.CUST.ACCT
+	    Y.RECORD1<FT.DEBIT.CURRENCY> = R.NEW(FT.CREDIT.CURRENCY)
+
+        Y.PREMIUM.AMOUNT = DROUND(Y.PREMIUM.AMOUNT,2)
+
+        Y.RECORD1<FT.CREDIT.CURRENCY> = 'USD' ;*INC0017512
+        Y.RECORD1<FT.CREDIT.AMOUNT> = Y.PREMIUM.AMOUNT
+        Y.RECORD1<FT.CREDIT.ACCT.NO> = Y.AIA.COA.AC
+        Y.RECORD1<FT.LOCAL.REF,Y.FT.REF.ID.POS> = ID.NEW
+            
+        Y.APP.NAME = 'FUNDS.TRANSFER'
+        Y.OFSFUNCT = 'I'
+        Y.PROCESS = 'PROCESS'
+        Y.OFSVERSION = 'FUNDS.TRANSFER,AMR.OFS.AIA'
+        Y.GTSMODE = ''
+        Y.NO.OF.AUTH = 0
+        Y.TRANSACTION.ID = ''
+    
+        CALL OFS.BUILD.RECORD(Y.APP.NAME,Y.OFSFUNCT,Y.PROCESS,Y.OFSVERSION,Y.GTSMODE,Y.NO.OF.AUTH,Y.TRANSACTION.ID,Y.RECORD1,Y.OFSRECORD)
+        AMR.insertOrAdd = 'add'
+        AMR.ERROR = ''
+        CALL ofs.addLocalRequest(Y.OFSRECORD,AMR.insertOrAdd,AMR.ERROR)
+    
+    END
+    
+RETURN
+
+END

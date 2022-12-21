@@ -1,0 +1,123 @@
+*-----------------------------------------------------------------------------
+SUBROUTINE AMR.V.CHECK.BRANCH
+*-------------------------------------------------------------------------
+
+    $INSERT I_COMMON
+    $INSERT I_EQUATE
+    $INSERT I_F.FUNDS.TRANSFER
+    $INSERT I_F.TELLER
+    $INSERT I_F.STANDING.ORDER
+    $INSERT I_F.ACCOUNT
+    $INSERT I_F.AMR.H.INTF.PARAM
+
+    GOSUB INITIALISE
+    GOSUB PROCESS
+RETURN
+*--------------- 
+INITIALISE:
+*---------------
+        
+    Y.CUR.COMPANY = ID.COMPANY
+    Y.COMM.POS = ""
+    Y.COMM.POS1 = ""  
+
+    FN.PARAM = 'F.AMR.H.INTF.PARAM'
+    F.PARAM = ''
+    CALL OPF(FN.PARAM,F.PARAM)
+
+    Y.PARAM = 'AMRPPBRANCHES'
+    CALL F.READ(FN.PARAM,Y.PARAM,R.PARAM,F.PARAM,E.PARAM)
+    Y.BRANCH.IDS = RAISE(RAISE(R.PARAM<AIP.VALUE.FROM>))
+    
+    Y.APPLICATION = "TELLER"
+    Y.FIELD = "AMR.MT.CHRG.AMT":VM:"AMR.FT.COM.TYPE"
+    Y.POS.REF = ""
+    CALL MULTI.GET.LOC.REF(Y.APPLICATION,Y.FIELD,Y.POS.REF)
+
+     Y.CHRG.AMT.POS = Y.POS.REF<1,1> 
+     Y.COM.TYPE.POS = Y.POS.REF<1,2>
+
+RETURN
+*---------------
+PROCESS:
+*---------------
+
+LOCATE Y.CUR.COMPANY IN Y.BRANCH.IDS SETTING Y.C.POS THEN
+
+   GOSUB PROCESS.WAIVE.CHARGES
+
+END ELSE
+
+   GOSUB PROCESS.ASSIGN.CHARGES
+
+END
+
+RETURN
+
+*---------------
+PROCESS.WAIVE.CHARGES:
+*---------------
+
+   BEGIN CASE
+
+        CASE APPLICATION EQ 'FUNDS.TRANSFER' AND COMI EQ ""
+          
+*             R.NEW(FT.COMMISSION.CODE) = "WAIVE"
+	     COMI = "WAIVE"
+             Y.COMM.TYPE = R.NEW(FT.COMMISSION.TYPE)
+		R.NEW(FT.COMMISSION.TYPE) = ""
+		R.NEW(FT.COMMISSION.AMT) = ""
+               
+        CASE APPLICATION EQ 'TELLER' AND COMI EQ ""
+           
+              COMI = "YES"
+
+                R.NEW(TT.TE.LOCAL.REF)<1,Y.COM.TYPE.POS> = ""
+                R.NEW(TT.TE.LOCAL.REF)<1,Y.CHRG.AMT.POS> = ""
+             
+        CASE APPLICATION EQ 'STANDING.ORDER' AND COMI EQ ""
+          
+*             R.NEW(STO.COMMISSION.CODE) = "WAIVE"
+	     COMI = "WAIVE"
+	     Y.COMM.TYPE = R.NEW(STO.COMMISSION.TYPE) 
+		R.NEW(STO.COMMISSION.TYPE) = ""
+		R.NEW(STO.COMMISSION.AMT) = ""
+
+        CASE APPLICATION EQ 'FUNDS.TRANSFER' AND COMI EQ "WAIVE"
+
+		R.NEW(FT.COMMISSION.TYPE) = ""
+		R.NEW(FT.COMMISSION.AMT) = ""
+               
+        CASE APPLICATION EQ 'TELLER' AND COMI EQ "YES"
+
+                R.NEW(TT.TE.LOCAL.REF)<1,Y.COM.TYPE.POS> = ""
+                R.NEW(TT.TE.LOCAL.REF)<1,Y.CHRG.AMT.POS> = ""
+             
+        CASE APPLICATION EQ 'STANDING.ORDER' AND COMI EQ "WAIVE"
+          
+		R.NEW(STO.COMMISSION.TYPE) = ""
+		R.NEW(STO.COMMISSION.AMT) = ""
+	     
+    END CASE
+
+RETURN
+
+*---------------
+PROCESS.ASSIGN.CHARGES:
+*---------------
+
+   BEGIN CASE
+
+        CASE APPLICATION EQ 'FUNDS.TRANSFER' OR APPLICATION EQ 'STANDING.ORDER'
+          
+	     COMI = "CREDIT LESS CHARGES"
+               
+        CASE APPLICATION EQ 'TELLER'
+           
+              COMI = "NO"
+	     
+    END CASE
+
+RETURN
+
+END     
